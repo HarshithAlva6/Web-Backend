@@ -6,12 +6,12 @@ DROP TABLE IF EXISTS game_states;
 DROP TABLE IF EXISTS game_history;
 DROP TABLE IF EXISTS valid_words;
 
-CREATE TABLE game_instances(
+CREATE TABLE game_instances (
     game_id INTEGER NOT NULL,
     secret_word TEXT NOT NULL,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
-    PRIMARY KEY(game_id),
+    PRIMARY KEY(game_id)
 );
 
 CREATE TABLE game_states (

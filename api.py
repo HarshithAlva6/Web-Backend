@@ -96,17 +96,13 @@ async def _hash_password(password: str, salt: str = None):
 
 
 async def _get_games_db():
-    db = getattr(g, "_database", None)
-    if db is None:
-        db = g._database = databases.Database(app.config["DATABASES"]["GAMES_URL"])
-        await db.connect()
+    db = g._database = databases.Database(app.config["DATABASES"]["GAMES_URL"])
+    await db.connect()
     return db
 
 async def _get_users_db():
-    db = getattr(g, "_database", None)
-    if db is None:
-        db = g._database = databases.Database(app.config["DATABASES"]["USERS_URL"])
-        await db.connect()
+    db = g._database = databases.Database(app.config["DATABASES"]["USERS_URL"])
+    await db.connect()
     return db
 
 async def _get_random_word():
@@ -190,7 +186,8 @@ async def username_exists(e):
 @validate_response(Error, 409)
 async def register_user(data):
     """Register a new user with a username and password."""
-    db = await _get_users_db()
+    userdb = await _get_users_db()
+    gamedb = await _get_games_db()
     user = dataclasses.asdict(data)
 
     # verify user input
@@ -204,7 +201,18 @@ async def register_user(data):
 
     # insert username/password into users in users.db
     try:
-        id = await db.execute(
+        id = await userdb.execute(
+            """
+            INSERT INTO users(username, password)
+            VALUES(:username, :password)
+            """,
+            user,
+        )
+    except sqlite3.IntegrityError as e:
+        abort(409, e)
+
+    try:
+        id = await gamedb.execute(
             """
             INSERT INTO users(username, password)
             VALUES(:username, :password)
@@ -216,7 +224,6 @@ async def register_user(data):
         
     # TODO: possibly change location to /games/<username>
     return user, 201, {"Location": f"/users/{user['username']}"}
-
 
 # ---------------------------------- sign in --------------------------------- #
 @app.route("/auth/signin")

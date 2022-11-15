@@ -81,10 +81,9 @@ class GameState:
 # ---------------------------------------------------------------------------- #
 
 async def _get_games_db():
-    db = getattr(g, "_database", None)
-    if db is None:
-        db = g._database = databases.Database(app.config["DATABASES"]["GAMES_URL"])
-        await db.connect()
+
+    db = g._database = databases.Database(app.config["DATABASES"]["GAMES_URL"])
+    await db.connect()
     return db
 
 async def _get_random_word():

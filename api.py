@@ -96,13 +96,11 @@ async def _hash_password(password: str, salt: str = None):
 
 
 async def _get_games_db():
-
     db = g._database = databases.Database(app.config["DATABASES"]["GAMES_URL"])
     await db.connect()
     return db
 
 async def _get_users_db():
-
     db = g._database = databases.Database(app.config["DATABASES"]["USERS_URL"])
     await db.connect()
     return db

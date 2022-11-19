@@ -156,6 +156,20 @@ async def register_user(data):
     # TODO: possibly change location to /games/<username>
     return user, 201, {"Location": f"/users/{user['username']}"}
 
+
+@app.route("/test", methods=["GET"])
+async def test():
+    app.logger.info("Test call")
+
+    return "Test successful", 200
+
+
+@app.route("/testauth", methods=["GET"])
+async def testauth():
+    app.logger.info("Test call")
+
+    return "Test auth successful", 200
+
 # ---------------------------------- sign in --------------------------------- #
 @app.route("/auth/signin")
 @tag(["auth"])
@@ -168,15 +182,17 @@ async def signin():
     Uses Basic Auth passed through Authorization header.
     """
 
+    app.logger.info("********###############@@@@@@@@@@@@@@@@@@@")
+
     auth = request.authorization
 
     # return bad request if invalid auth header
     if not auth:
-        abort(400, "Authorization header is required.")
+        abort(401, "Authorization header is required.")
 
     # check both username and password are present
     if not auth.username or not auth.password:
-        abort(400, "Username and password are required.")
+        abort(401, "Username and password are required.")
 
     db = await _get_users_db()
 

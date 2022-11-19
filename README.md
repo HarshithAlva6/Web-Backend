@@ -57,7 +57,7 @@ The var folder holds wordle.db which contains the following tables:
  * Used to start a new game with a random guess by user
  * If username is correct returns:
  
-    ```
+    ```http://tuffix-vm:5000
     {
         "completed": false,
         "correct": "?????",

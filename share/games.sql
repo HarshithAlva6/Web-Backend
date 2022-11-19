@@ -42,6 +42,10 @@ CREATE TABLE valid_words (
     PRIMARY KEY(word)
 );
 
+CREATE INDEX game_states_idx_game_id ON game_states(game_id);
+CREATE INDEX games_idx_username ON games(username);
+CREATE INDEX game_history_idx_game_id ON game_history(game_id);
+
 INSERT INTO users VALUES ("john", "ecba7dc9b7edd8b83280c73677b2f63f$066614f195cf25cdea24d79771249f923044c9067bd9e0e84a3aa5824b39fb07");
 INSERT INTO games VALUES (1, "cigar", "john");
 INSERT INTO game_states VALUES (1, 2, "In Progress");

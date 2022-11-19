@@ -2,7 +2,9 @@
 
 # Team members:
 1. Ashley Thorlin
-2. 
+2. Harshith Harijeevan
+3. Jiu Lin
+4. Brijesh Prajapati
 
 ## Documentation
 Procfile and .env from https://github.com/ProfAvery/cpsc449/tree/master/quart/hello
@@ -11,10 +13,18 @@ Procfile and .env from https://github.com/ProfAvery/cpsc449/tree/master/quart/he
 The goal is to Design endpoints for an application similar to Wordle.It will allow user to play more than one game in a day unlike the orignal wordle. The user will get overall six chances to guess the correct word. The guesses will be matched against the secret word to determine if it is correct or incorrect. If it's correct, the game will stop and if it is incorrect the user will get their remaining chances to guess.
 The implementation of API is done in Python using the Quart framework and some ancillary tools like Foreman and sqlite3. The project also requires to create relational database schemas for the API implementation.
 
-# How to initialize
-To initialize the sqlite database, navigate to the project directory using a terminal and then type in `./bin/init.sh` or `sh ./bin/init.sh` and then create a locally hosted server by using `foreman start`
+# Project 2
+## How to initialize databases
+To initialize the sqlite database, navigate to the project directory using a terminal and then type in `./bin/init.sh` or `sh ./bin/init.sh`.
 
-# How to use endpoints
+## How to configure Nginx
+
+
+## How to start services
+
+
+# Project 1
+## How to use endpoints
   HTTP verbs | endpoints | Action 
 
 - To register a new user: `http POST localhost:5000/auth/register username={user} password={pass}`
@@ -26,7 +36,7 @@ To initialize the sqlite database, navigate to the project directory using a ter
 
 Furthermore, you can view these endpoints in Quart Schema Documentation form when the server is running by navigating to `localhost:5000/docs` in a web browser!
 
- # Features:
+## Features:
  Creating a RESTful API that perform the following functionalities:
 
  - User registration
@@ -36,14 +46,14 @@ Furthermore, you can view these endpoints in Quart Schema Documentation form whe
  - Retrieve state of in progress games
  - Listing in-progress games
 
-# Database:
+## Database:
 The var folder holds wordle.db which contains the following tables:
 - users
 - games
 - game_states
 - valid_words
 
-# Functionality
+## Functionality
  User Registration:
  * User will have unique username and password
  * password is hashed with pbkdf2 and stored

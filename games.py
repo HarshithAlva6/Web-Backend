@@ -3,8 +3,6 @@ import dataclasses
 import sqlite3
 import json
 import toml
-import hashlib
-import secrets
 import uuid
 
 from quart import Quart, g, request, abort, make_response
@@ -61,7 +59,7 @@ class CreateGame:
 
 @dataclasses.dataclass
 class CreatedGame:
-    game_id: int
+    game_id: str
     remaining_guesses: int = 6
     status: str = "In Progress"
 
@@ -70,7 +68,7 @@ class CreatedGame:
 class GameState:
     """The state of the game including information about last guess."""
 
-    game_id: int
+    game_id: str
     guess: str
     correct_spots: str = "hel??"
     incorrect_spots: str = "?or??"
@@ -193,7 +191,7 @@ async def create_game(data):
     if username:
         # create new row in game
         try:
-            id = await db.execute(
+            await db.execute(
                 """
                 INSERT INTO games(secret_word, username)
                 VALUES(:secret_word, :username)
@@ -203,7 +201,7 @@ async def create_game(data):
         except sqlite3.IntegrityError as e:
             abort(409, e)
 
-        game["game_id"] = id
+        game["game_id"] = uuid.uuid4()
 
         game_state = {
             "game_id": game["game_id"],
@@ -212,7 +210,7 @@ async def create_game(data):
         }
         # create new row in game_states
         try:
-            id = await db.execute(
+            await db.execute(
                 """
                 INSERT INTO game_states(game_id, remaining_guesses, status)
                 VALUES(:game_id, :remaining_guesses, :status)
@@ -229,7 +227,7 @@ async def create_game(data):
 
 
 # ---------------------------- retrieve game state --------------------------- #
-@app.route("/games/<int:game_id>", methods=["GET"])
+@app.route("/games/<string:game_id>", methods=["GET"])
 @tag(["games"])
 @validate_response(Error, 404)
 async def get_game_state(game_id):
@@ -293,7 +291,7 @@ async def get_game_state(game_id):
 
 
 # --------------------- make a guess / update game state --------------------- #
-@app.route("/games/<int:game_id>", methods=["POST"])
+@app.route("/games/<string:game_id>", methods=["POST"])
 @tag(["games"])
 @validate_request(Guess)
 @validate_response(Error, 400)

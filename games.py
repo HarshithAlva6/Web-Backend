@@ -5,6 +5,7 @@ import json
 import toml
 import hashlib
 import secrets
+import uuid
 
 from quart import Quart, g, request, abort, make_response
 from quart_schema import (
@@ -157,6 +158,14 @@ async def username_exists(e):
 # ---------------------------------------------------------------------------- #
 #                                  api routes                                  #
 # ---------------------------------------------------------------------------- #
+
+
+@app.route("/games/testgame", methods=["GET"])
+@tag(["games"])
+async def test_game():
+    app.logger.info("Games Test call")
+
+    return "Games Test successful", 200
 
 # -------------------------------- create game ------------------------------- #
 @app.route("/games/create", methods=["POST"])

@@ -182,8 +182,6 @@ async def signin():
     Uses Basic Auth passed through Authorization header.
     """
 
-    app.logger.info("********###############@@@@@@@@@@@@@@@@@@@")
-
     auth = request.authorization
 
     # return bad request if invalid auth header

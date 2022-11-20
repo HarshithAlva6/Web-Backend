@@ -175,7 +175,13 @@ async def create_game(data):
     """Create a new game for a user with a random word."""
     game = dataclasses.asdict(data)
     game["secret_word"] = await _get_random_word()
+    app.logger.warning(game)
 
+    creategame = {
+        "secret_word" : game["secret_word"],
+        "username" : game["username"],
+        "game_id" : str(uuid.uuid4())
+    }
     db = await _get_games_db()
 
     username = await db.fetch_one(
@@ -190,37 +196,30 @@ async def create_game(data):
 
     if username:
         # create new row in game
-        try:
-            await db.execute(
-                """
-                INSERT INTO games(secret_word, username)
-                VALUES(:secret_word, :username)
-                """,
-                game,
-            )
-        except sqlite3.IntegrityError as e:
-            abort(409, e)
-
-        game["game_id"] = uuid.uuid4()
+        await db.execute(
+            """
+            INSERT INTO games(secret_word, username, game_id)
+            VALUES(:secret_word, :username, :game_id)
+            """,
+            creategame,
+        )
 
         game_state = {
-            "game_id": game["game_id"],
+            "game_id": creategame["game_id"],
             "remaining_guesses": 6,
             "status": "In Progress",
         }
+        app.logger.warning(game_state)
         # create new row in game_states
-        try:
-            await db.execute(
-                """
-                INSERT INTO game_states(game_id, remaining_guesses, status)
-                VALUES(:game_id, :remaining_guesses, :status)
-                """,
-                game_state,
-            )
-        except sqlite3.IntegrityError as e:
-            abort(409, e)
+        await db.execute(
+            """
+            INSERT INTO game_states(game_id, remaining_guesses, status)
+            VALUES(:game_id, :remaining_guesses, :status)
+            """,
+            game_state,
+        )
 
-        return game_state, 201, {"Location": f"/games/{game['game_id']}"}
+        return game_state, 201, {"Location": f"/games/{creategame['game_id']}"}
 
     else:
         abort(404, "Username does not exist.")

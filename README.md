@@ -2,7 +2,7 @@
 
 # Team members:
 1. Ashley Thorlin
-2. Harshith Harijeevan
+2. Harshith Harijeevan - Me
 3. Jiu Lin
 4. Brijesh Prajapati
 
